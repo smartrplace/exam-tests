@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>de.cnoelle</groupId>
+		<artifactId>exam-tests</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	
+    <artifactId>felix-ogema-secure-native</artifactId>
+    <name>Felix OGEMA security native tests</name>
+    
+    <packaging>bundle</packaging>
+    
+    <properties>
+    	<ogema.version>2.1.3</ogema.version>
+    </properties>
+    
+    <!-- TODO remove once all dependencies are available from Maven central -->
+	<repositories>
+		<repository>
+			<releases />
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>ogema-releases</id>
+			<name>ogema-releases</name>
+			<url>https://www.ogema-source.net/artifactory/libs-release</url>
+		</repository>
+	</repositories>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <!-- overwrite parent profile, because we need to add add-modules -->
+    <profiles>
+        <profile>
+            <id>java8</id>
+            <activation>
+			    <jdk>[1.0,1.9)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <argLine>
+                                -ea
+								-Djava.security.policy=config/all.policy -Dorg.ogema.security=on
+                            </argLine>
+                            <trimStackTrace>false</trimStackTrace>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>java9</id>
+            <activation>
+                <jdk>[9,)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <argLine>
+                                -ea
+								-Djava.security.policy=config/all.policy -Dorg.ogema.security=on
+								--illegal-access=warn
+								--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED
+								--add-modules=java.xml.bind,java.xml.ws.annotation
+                            </argLine>
+                            <trimStackTrace>false</trimStackTrace>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+	</profiles>
+
+    <dependencies>
+    <!-- test only dependencies below -->
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.core</artifactId>
+			<scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.cmpn</artifactId>
+			<scope>test</scope>
+        </dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	    <dependency>
+			<groupId>org.ops4j.pax.exam</groupId>
+			<artifactId>pax-exam-junit4</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.ops4j.pax.exam</groupId>
+		    <artifactId>pax-exam-container-native</artifactId>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.framework</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.ops4j.pax.exam</groupId>
+			<artifactId>pax-exam-link-mvn</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.ops4j.pax.url</groupId>
+			<artifactId>pax-url-aether</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-atinject_1.0_spec</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.ops4j.pax.tinybundles</groupId>
+		    <artifactId>tinybundles</artifactId>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.http.servlet-api</artifactId>
+			<version>1.1.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.http.jetty</artifactId>
+			<version>4.0.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+     		<groupId>org.ogema.core</groupId>
+     		<artifactId>api</artifactId>
+     		<version>${ogema.version}</version>
+     		<scope>test</scope>
+     	</dependency>
+		<dependency>
+     		<groupId>org.ogema.ref-impl</groupId>
+     		<artifactId>internal-api</artifactId>
+     		<version>${ogema.version}</version>
+     		<scope>test</scope>
+     	</dependency>
+   </dependencies>
+</project>
