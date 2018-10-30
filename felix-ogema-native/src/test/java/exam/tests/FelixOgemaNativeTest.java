@@ -36,7 +36,9 @@ import org.osgi.framework.ServiceRegistration;
 public class FelixOgemaNativeTest {
 
 	private static final String SLF4J_VERSION = "1.7.25";
-	private static final String OGEMA_VERSION = "2.2.0-alpha-20180724";
+	private static final String OGEMA_VERSION = "2.2.0";
+	private static final String MOXY_VERSION = "2.7.3";
+	private static final String JACKSON_VERSION = "2.9.7";
 	private static final Path osgiStorage = Paths.get("data/osgi-storage");
 	
 	@Inject
@@ -79,6 +81,14 @@ public class FelixOgemaNativeTest {
 			Assert.assertTrue("App stop timed out", stopLatch.await(10, TimeUnit.SECONDS));
 		}
 	}
+	
+	private static int getJavaVersion() {
+		String version = System.getProperty("java.specification.version");
+		final int idx = version.indexOf('.');
+		if (idx > 0)
+			version = version.substring(idx + 1);
+		return Integer.parseInt(version); 
+	}
 
 	@Configuration
 	public Option[] configuration() throws IOException {
@@ -90,12 +100,20 @@ public class FelixOgemaNativeTest {
 				CoreOptions.vmOption("-ea"), 
 				// these two options would be required with the forked launcher; here they are in the surefire plugin
 //				CoreOptions.vmOption("--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED"),
-//				CoreOptions.vmOption("--add-modules=java.xml.bind,java.xml.ws.annotation"), 
+//				CoreOptions.vmOption("--add-modules=java.xml.bind,java.xml.ws.annotation"),
+				CoreOptions.when(getJavaVersion() >= 11).useOptions(
+						CoreOptions.mavenBundle("com.sun.activation", "javax.activation", "1.2.0"),
+						CoreOptions.mavenBundle("javax.annotation", "javax.annotation-api", "1.3.2"),
+						CoreOptions.mavenBundle("javax.xml.bind", "jaxb-api", "2.4.0-b180830.0359"),
+						CoreOptions.mavenBundle("org.eclipse.persistence", "org.eclipse.persistence.asm", MOXY_VERSION),
+						CoreOptions.mavenBundle("org.eclipse.persistence", "org.eclipse.persistence.core", MOXY_VERSION),
+						CoreOptions.mavenBundle("org.eclipse.persistence", "org.eclipse.persistence.moxy", MOXY_VERSION)
+				),
 				CoreOptions.junitBundles(),
-				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.framework.security", "2.6.0"),
+				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.framework.security", "2.6.1"),
 				CoreOptions.mavenBundle("org.ogema.ref-impl", "permission-admin").version(OGEMA_VERSION).startLevel(1),
-				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.scr", "2.1.2"),
-				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.configadmin", "1.9.4"),
+				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.scr", "2.1.8"),
+				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.configadmin", "1.9.6"),
 				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.useradmin.filestore", "1.0.2"),
 				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.useradmin", "1.0.3"),
 				CoreOptions.mavenBundle("org.osgi", "org.osgi.service.useradmin", "1.1.0"),
@@ -111,18 +129,18 @@ public class FelixOgemaNativeTest {
 				CoreOptions.mavenBundle("org.slf4j", "slf4j-simple", SLF4J_VERSION).noStart(),
 				
 				// Jackson
-				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-core", "2.9.6"),
-				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-annotations", "2.9.6"),
-				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-databind", "2.9.6"),
-				CoreOptions.mavenBundle("com.fasterxml.jackson.module", "jackson-module-jaxb-annotations", "2.9.6"),
+				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-core", JACKSON_VERSION),
+				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-annotations", JACKSON_VERSION),
+				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-databind", JACKSON_VERSION),
+				CoreOptions.mavenBundle("com.fasterxml.jackson.module", "jackson-module-jaxb-annotations", JACKSON_VERSION),
 				
 				// commons
 				CoreOptions.mavenBundle("commons-io", "commons-io", "2.6"),
 				CoreOptions.mavenBundle("org.apache.commons", "commons-math3", "3.6.1"),
 				CoreOptions.mavenBundle("commons-codec", "commons-codec", "1.11"),
 				CoreOptions.mavenBundle("org.apache.commons", "commons-lang3", "3.7"),
-				CoreOptions.mavenBundle("org.json", "json", "20170516"),
-				CoreOptions.mavenBundle("com.google.guava", "guava", "23.0"),
+				CoreOptions.mavenBundle("org.json", "json", "20180813"),
+				CoreOptions.mavenBundle("com.google.guava", "guava", "27.0-jre"),
 				
 				// OGEMA
 				CoreOptions.mavenBundle("org.ogema.core", "api", OGEMA_VERSION),

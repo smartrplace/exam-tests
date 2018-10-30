@@ -142,7 +142,7 @@ public class ConfigTest {
 				CoreOptions.frameworkProperty(Constants.FRAMEWORK_STORAGE_CLEAN).value(Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT),
 				CoreOptions.frameworkProperty(Constants.FRAMEWORK_BSNVERSION).value(Constants.FRAMEWORK_BSNVERSION_MULTIPLE),
 				// specifying the JSON directly does not work in tests... 
-				// maybe pax exam tweak the system and framework properties, removing "\""?
+				// maybe pax exam tweaks the system and framework properties, removing "\""?
 				CoreOptions.frameworkProperty("configurator.initial").value("file:" + configFile.toString()),
 				CoreOptions.vmOption("-ea"), 
 				// these four options are required with the forked launcher; otherwise they are in the surefire plugin

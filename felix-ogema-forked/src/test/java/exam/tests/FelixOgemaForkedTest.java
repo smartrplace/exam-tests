@@ -36,7 +36,9 @@ import org.osgi.framework.ServiceRegistration;
 public class FelixOgemaForkedTest {
 
 	private static final String SLF4J_VERSION = "1.7.25";
-	private static final String OGEMA_VERSION = "2.2.0-alpha-20180724";
+	private static final String OGEMA_VERSION = "2.2.0";
+	private static final String MOXY_VERSION = "2.7.3";
+	private static final String JACKSON_VERSION = "2.9.7";
 	private static final Path osgiStorage = Paths.get("data/osgi-storage");
 	
 	@Inject
@@ -87,7 +89,12 @@ public class FelixOgemaForkedTest {
 			version = version.substring(idx + 1);
 		return Integer.parseInt(version); 
 	}
-
+	
+	private static final boolean isJava9Or10() {
+		final int v = getJavaVersion();
+		return v == 9 || v == 10;
+	}
+	
 	@Configuration
 	public Option[] configuration() throws IOException {
 		return new Option[] {
@@ -96,16 +103,25 @@ public class FelixOgemaForkedTest {
 				CoreOptions.frameworkProperty(Constants.FRAMEWORK_STORAGE_CLEAN).value(Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT),
 				CoreOptions.frameworkProperty(Constants.FRAMEWORK_BSNVERSION).value(Constants.FRAMEWORK_BSNVERSION_MULTIPLE),
 				CoreOptions.vmOption("-ea"), 
-				// these two need to move to the surefire plugin if we use the native launcher
 				CoreOptions.when(getJavaVersion() >= 9).useOptions(
-					CoreOptions.vmOption("--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED"),
-					CoreOptions.vmOption("--add-modules=java.xml.bind,java.xml.ws.annotation")
+						CoreOptions.vmOption("--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED")
+				),
+				CoreOptions.when(isJava9Or10()).useOptions(
+						CoreOptions.vmOption("--add-modules=java.xml.bind,java.xml.ws.annotation")
+				),
+				CoreOptions.when(getJavaVersion() >= 11).useOptions(
+						CoreOptions.mavenBundle("com.sun.activation", "javax.activation", "1.2.0"),
+						CoreOptions.mavenBundle("javax.annotation", "javax.annotation-api", "1.3.2"),
+						CoreOptions.mavenBundle("javax.xml.bind", "jaxb-api", "2.4.0-b180830.0359"),
+						CoreOptions.mavenBundle("org.eclipse.persistence", "org.eclipse.persistence.asm", MOXY_VERSION),
+						CoreOptions.mavenBundle("org.eclipse.persistence", "org.eclipse.persistence.core", MOXY_VERSION),
+						CoreOptions.mavenBundle("org.eclipse.persistence", "org.eclipse.persistence.moxy", MOXY_VERSION)
 				),
 				CoreOptions.junitBundles(),
-				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.framework.security", "2.6.0"),
+				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.framework.security", "2.6.1"),
 				CoreOptions.mavenBundle("org.ogema.ref-impl", "permission-admin").version(OGEMA_VERSION).startLevel(1),
-				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.scr", "2.1.2"),
-				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.configadmin", "1.9.4"),
+				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.scr", "2.1.8"),
+				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.configadmin", "1.9.6"),
 				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.useradmin.filestore", "1.0.2"),
 				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.useradmin", "1.0.3"),
 				CoreOptions.mavenBundle("org.osgi", "org.osgi.service.useradmin", "1.1.0"),
@@ -121,18 +137,18 @@ public class FelixOgemaForkedTest {
 				CoreOptions.mavenBundle("org.slf4j", "slf4j-simple", SLF4J_VERSION).noStart(),
 				
 				// Jackson
-				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-core", "2.9.6"),
-				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-annotations", "2.9.6"),
-				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-databind", "2.9.6"),
-				CoreOptions.mavenBundle("com.fasterxml.jackson.module", "jackson-module-jaxb-annotations", "2.9.6"),
+				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-core", JACKSON_VERSION),
+				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-annotations", JACKSON_VERSION),
+				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-databind", JACKSON_VERSION),
+				CoreOptions.mavenBundle("com.fasterxml.jackson.module", "jackson-module-jaxb-annotations", JACKSON_VERSION),
 				
 				// commons
 				CoreOptions.mavenBundle("commons-io", "commons-io", "2.6"),
 				CoreOptions.mavenBundle("org.apache.commons", "commons-math3", "3.6.1"),
 				CoreOptions.mavenBundle("commons-codec", "commons-codec", "1.11"),
 				CoreOptions.mavenBundle("org.apache.commons", "commons-lang3", "3.7"),
-				CoreOptions.mavenBundle("org.json", "json", "20170516"),
-				CoreOptions.mavenBundle("com.google.guava", "guava", "23.0"),
+				CoreOptions.mavenBundle("org.json", "json", "20180813"),
+				CoreOptions.mavenBundle("com.google.guava", "guava", "27.0-jre"),
 				
 				// OGEMA
 				CoreOptions.mavenBundle("org.ogema.core", "api", OGEMA_VERSION),
@@ -155,7 +171,7 @@ public class FelixOgemaForkedTest {
 				CoreOptions.mavenBundle("org.ogema.tools", "resource-utils").version(OGEMA_VERSION),
 				
 				CoreOptions.mavenBundle("org.ops4j.pax.tinybundles", "tinybundles", "3.0.0"),
-				CoreOptions.mavenBundle("biz.aQute.bnd", "biz.aQute.bndlib", "3.5.0")
+				CoreOptions.mavenBundle("biz.aQute.bnd", "biz.aQute.bndlib", "3.5.0") // v >= 4.0.0 not supported by tinybundles yet
 			};
 	}
 	

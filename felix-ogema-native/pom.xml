@@ -63,7 +63,7 @@
         <profile>
             <id>java9</id>
             <activation>
-                <jdk>[9,)</jdk>
+                <jdk>[9,11)</jdk>
             </activation>
             <build>
                 <plugins>
@@ -75,6 +75,27 @@
 								--illegal-access=warn
 								--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED
 								--add-modules=java.xml.bind,java.xml.ws.annotation
+                            </argLine>
+                            <trimStackTrace>false</trimStackTrace>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>java11</id>
+            <activation>
+                <jdk>[11,)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <argLine>
+                                -ea
+								--illegal-access=warn
+								--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED
                             </argLine>
                             <trimStackTrace>false</trimStackTrace>
                         </configuration>
