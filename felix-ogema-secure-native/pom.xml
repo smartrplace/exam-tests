@@ -13,21 +13,8 @@
     <packaging>bundle</packaging>
     
     <properties>
-    	<ogema.version>2.1.3</ogema.version>
+    	<ogema.version>2.2.0</ogema.version>
     </properties>
-    
-    <!-- TODO remove once all dependencies are available from Maven central -->
-	<repositories>
-		<repository>
-			<releases />
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>ogema-releases</id>
-			<name>ogema-releases</name>
-			<url>https://www.ogema-source.net/artifactory/libs-release</url>
-		</repository>
-	</repositories>
     
     <build>
         <plugins>

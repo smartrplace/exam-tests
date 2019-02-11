@@ -112,8 +112,8 @@ public class FelixOgemaNativeTest {
 				CoreOptions.junitBundles(),
 				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.framework.security", "2.6.1"),
 				CoreOptions.mavenBundle("org.ogema.ref-impl", "permission-admin").version(OGEMA_VERSION).startLevel(1),
-				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.scr", "2.1.8"),
-				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.configadmin", "1.9.6"),
+				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.scr", "2.1.14"),
+				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.configadmin", "1.9.10"),
 				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.useradmin.filestore", "1.0.2"),
 				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.useradmin", "1.0.3"),
 				CoreOptions.mavenBundle("org.osgi", "org.osgi.service.useradmin", "1.1.0"),
@@ -138,9 +138,10 @@ public class FelixOgemaNativeTest {
 				CoreOptions.mavenBundle("commons-io", "commons-io", "2.6"),
 				CoreOptions.mavenBundle("org.apache.commons", "commons-math3", "3.6.1"),
 				CoreOptions.mavenBundle("commons-codec", "commons-codec", "1.11"),
-				CoreOptions.mavenBundle("org.apache.commons", "commons-lang3", "3.7"),
+				CoreOptions.mavenBundle("org.apache.commons", "commons-lang3", "3.8.1"),
 				CoreOptions.mavenBundle("org.json", "json", "20180813"),
 				CoreOptions.mavenBundle("com.google.guava", "guava", "27.0-jre"),
+				CoreOptions.mavenBundle("org.ow2.asm", "asm", "7.0"),
 				
 				// OGEMA
 				CoreOptions.mavenBundle("org.ogema.core", "api", OGEMA_VERSION),

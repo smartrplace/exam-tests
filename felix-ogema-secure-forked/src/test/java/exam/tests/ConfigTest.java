@@ -51,7 +51,7 @@ import org.osgi.service.cm.ConfigurationAdmin;
 public class ConfigTest {
 
 	private static final String SLF4J_VERSION = "1.7.25";
-	private static final String OGEMA_VERSION = "2.2.0-alpha-20180724";
+	private static final String OGEMA_VERSION = "2.2.0";
 	private static final Path osgiStorage = Paths.get("data/osgi-storage");
 	// FIXME it should be possible to provide the initial configuration in memory 
 	private static final Path configFile = Paths.get("data/config.json");
@@ -154,11 +154,11 @@ public class ConfigTest {
 				),
 				//
 				CoreOptions.junitBundles(),
-				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.framework.security", "2.6.0"),
+				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.framework.security", "2.6.1"),
 				CoreOptions.mavenBundle("org.ogema.ref-impl", "permission-admin").version(OGEMA_VERSION).startLevel(1),
-				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.scr", "2.1.2"),
-				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.configadmin", "1.9.5-SNAPSHOT"),
-				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.configurator", "1.0.5-SNAPSHOT"),
+				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.scr", "2.1.14"),
+				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.configadmin", "1.9.10"),
+				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.configurator", "1.0.8"),
 				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.useradmin.filestore", "1.0.2"),
 				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.useradmin", "1.0.3"),
 				CoreOptions.mavenBundle("org.osgi", "org.osgi.service.useradmin", "1.1.0"),
@@ -183,9 +183,10 @@ public class ConfigTest {
 				CoreOptions.mavenBundle("commons-io", "commons-io", "2.6"),
 				CoreOptions.mavenBundle("org.apache.commons", "commons-math3", "3.6.1"),
 				CoreOptions.mavenBundle("commons-codec", "commons-codec", "1.11"),
-				CoreOptions.mavenBundle("org.apache.commons", "commons-lang3", "3.7"),
+				CoreOptions.mavenBundle("org.apache.commons", "commons-lang3", "3.8.1"),
 				CoreOptions.mavenBundle("org.json", "json", "20170516"),
 				CoreOptions.mavenBundle("com.google.guava", "guava", "23.0"),
+				CoreOptions.mavenBundle("org.ow2.asm", "asm", "7.0"),
 				
 				// OGEMA
 				CoreOptions.mavenBundle("org.ogema.core", "api", OGEMA_VERSION),
