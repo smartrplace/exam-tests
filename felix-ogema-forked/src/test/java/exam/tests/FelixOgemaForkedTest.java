@@ -35,10 +35,10 @@ import org.osgi.framework.ServiceRegistration;
 @ExamReactorStrategy(PerClass.class)
 public class FelixOgemaForkedTest {
 
-	private static final String SLF4J_VERSION = "1.7.25";
+	private static final String SLF4J_VERSION = "1.7.26";
 	private static final String OGEMA_VERSION = "2.2.0";
-	private static final String MOXY_VERSION = "2.7.3";
-	private static final String JACKSON_VERSION = "2.9.7";
+	private static final String MOXY_VERSION = "2.7.4";
+	private static final String JACKSON_VERSION = "2.9.9";
 	private static final Path osgiStorage = Paths.get("data/osgi-storage");
 	
 	@Inject
@@ -115,7 +115,8 @@ public class FelixOgemaForkedTest {
 						CoreOptions.mavenBundle("javax.xml.bind", "jaxb-api", "2.4.0-b180830.0359"),
 						CoreOptions.mavenBundle("org.eclipse.persistence", "org.eclipse.persistence.asm", MOXY_VERSION),
 						CoreOptions.mavenBundle("org.eclipse.persistence", "org.eclipse.persistence.core", MOXY_VERSION),
-						CoreOptions.mavenBundle("org.eclipse.persistence", "org.eclipse.persistence.moxy", MOXY_VERSION)
+						CoreOptions.mavenBundle("org.eclipse.persistence", "org.eclipse.persistence.moxy", MOXY_VERSION),
+						CoreOptions.vmOption("-Djavax.xml.bind.JAXBContextFactory=org.eclipse.persistence.jaxb.JAXBContextFactory")
 				),
 				CoreOptions.junitBundles(),
 				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.framework.security", "2.6.1"),

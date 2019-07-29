@@ -35,10 +35,10 @@ import org.osgi.framework.ServiceRegistration;
 @ExamReactorStrategy(PerClass.class)
 public class FelixOgemaNativeTest {
 
-	private static final String SLF4J_VERSION = "1.7.25";
+	private static final String SLF4J_VERSION = "1.7.26";
 	private static final String OGEMA_VERSION = "2.2.0";
-	private static final String MOXY_VERSION = "2.7.3";
-	private static final String JACKSON_VERSION = "2.9.7";
+	private static final String MOXY_VERSION = "2.7.4";
+	private static final String JACKSON_VERSION = "2.9.9";
 	private static final Path osgiStorage = Paths.get("data/osgi-storage");
 	
 	@Inject

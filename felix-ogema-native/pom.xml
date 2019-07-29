@@ -13,7 +13,7 @@
     <packaging>bundle</packaging>
     
     <properties>
-    	<ogema.version>2.1.3</ogema.version>
+    	<ogema.version>2.2.0</ogema.version>
     </properties>
     
     <build>
@@ -81,6 +81,7 @@
                         <configuration>
                             <argLine>
                                 -ea
+                                -Djavax.xml.bind.JAXBContextFactory=org.eclipse.persistence.jaxb.JAXBContextFactory
 								--illegal-access=warn
 								--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED
                             </argLine>

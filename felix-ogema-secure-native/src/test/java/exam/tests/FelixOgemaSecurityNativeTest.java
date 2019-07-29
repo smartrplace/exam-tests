@@ -35,8 +35,11 @@ import org.osgi.framework.ServiceRegistration;
 @ExamReactorStrategy(PerClass.class)
 public class FelixOgemaSecurityNativeTest {
 
-	private static final String SLF4J_VERSION = "1.7.25";
+	private static final String SLF4J_VERSION = "1.7.26";
 	private static final String OGEMA_VERSION = "2.2.0";
+	private static final String MOXY_VERSION = "2.7.4";
+	private static final String JACKSON_VERSION = "2.9.9";
+	
 	private static final Path osgiStorage = Paths.get("data/osgi-storage");
 	
 	@Inject
@@ -79,6 +82,14 @@ public class FelixOgemaSecurityNativeTest {
 			Assert.assertTrue("App stop timed out", stopLatch.await(10, TimeUnit.SECONDS));
 		}
 	}
+	
+	private static int getJavaVersion() {
+		String version = System.getProperty("java.specification.version");
+		final int idx = version.indexOf('.');
+		if (idx > 0)
+			version = version.substring(idx + 1);
+		return Integer.parseInt(version); 
+	}
 
 	@Configuration
 	public Option[] configuration() throws IOException {
@@ -94,6 +105,15 @@ public class FelixOgemaSecurityNativeTest {
 //				CoreOptions.vmOption("-Dorg.ogema.security=on"),
 //				CoreOptions.vmOption("--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED"),
 //				CoreOptions.vmOption("--add-modules=java.xml.bind,java.xml.ws.annotation"),
+				CoreOptions.when(getJavaVersion() >= 11).useOptions(
+						CoreOptions.mavenBundle("com.sun.activation", "javax.activation", "1.2.0"),
+						CoreOptions.mavenBundle("javax.annotation", "javax.annotation-api", "1.3.2"),
+						CoreOptions.mavenBundle("javax.xml.bind", "jaxb-api", "2.4.0-b180830.0359"),
+						CoreOptions.mavenBundle("org.eclipse.persistence", "org.eclipse.persistence.asm", MOXY_VERSION),
+						CoreOptions.mavenBundle("org.eclipse.persistence", "org.eclipse.persistence.core", MOXY_VERSION),
+						CoreOptions.mavenBundle("org.eclipse.persistence", "org.eclipse.persistence.moxy", MOXY_VERSION)
+//						CoreOptions.vmOption("-Djavax.xml.bind.JAXBContextFactory=org.eclipse.persistence.jaxb.JAXBContextFactory")
+				),
 				CoreOptions.junitBundles(),
 				CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.framework.security", "2.6.1"),
 				CoreOptions.mavenBundle("org.ogema.ref-impl", "permission-admin").version(OGEMA_VERSION).startLevel(1),
@@ -114,10 +134,10 @@ public class FelixOgemaSecurityNativeTest {
 				CoreOptions.mavenBundle("org.slf4j", "slf4j-simple", SLF4J_VERSION).noStart(),
 				
 				// Jackson
-				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-core", "2.9.6"),
-				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-annotations", "2.9.6"),
-				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-databind", "2.9.6"),
-				CoreOptions.mavenBundle("com.fasterxml.jackson.module", "jackson-module-jaxb-annotations", "2.9.6"),
+				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-core", JACKSON_VERSION),
+				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-annotations", JACKSON_VERSION),
+				CoreOptions.mavenBundle("com.fasterxml.jackson.core", "jackson-databind", JACKSON_VERSION),
+				CoreOptions.mavenBundle("com.fasterxml.jackson.module", "jackson-module-jaxb-annotations", JACKSON_VERSION),
 				
 				// commons
 				CoreOptions.mavenBundle("commons-io", "commons-io", "2.6"),
